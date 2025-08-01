@@ -1,7 +1,6 @@
 name: 'Maven Build'
-description: 'Run Maven build'
+description: 'Run Maven build with package'
 runs:
-  using: 'docker'
-  image: 'maven:3.9.6-eclipse-temurin-21'
-  entrypoint: 'mvn'
-  args: ['clean', 'install', '-B']
+  using: 'composite'
+  steps:
+    - run: mvn -B package --file pom.xml
