@@ -34,3 +34,10 @@ jobs:
               with:
                 image_name: academy
                 path_dockerfile: src/main/docker/Dockerfile.jvm
+
+    list_images:
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - name: List Docker images
+          run: docker image ls
