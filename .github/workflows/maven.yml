@@ -21,3 +21,16 @@ jobs:
         
             - name: Run Maven build custom action
               uses: ./.github/actions/maven_build
+
+            - name: Build Docker image with explicit tag
+              uses: ./.github/actions/docker_build
+              with:
+                image_name: academy
+                tag_name: v1.0.0
+                path_dockerfile: src/main/docker/Dockerfile.jvm
+
+            - name: Build Docker image with timestamp tag
+              uses: ./.github/actions/docker_build
+              with:
+                image_name: academy
+                path_dockerfile: src/main/docker/Dockerfile.jvm

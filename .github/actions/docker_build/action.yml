@@ -1,0 +1,29 @@
+name: 'Docker Build'
+description: 'Build a Docker image with customizable Dockerfile, image name, and tag'
+
+inputs:
+  path_dockerfile:
+    description: 'src/main/docker/Dockerfile.jvm'
+    required: false
+    default: 'Dockerfile'
+  image_name:
+    description: 'academy'
+    required: true
+  tag_name:
+    description: '1754052266'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        if [ -z "${{ inputs.tag_name }}" ]; then
+          TAG=$(date +%s)
+        else
+          TAG="${{ inputs.tag_name }}"
+        fi
+
+        echo "Building Docker image '${{ inputs.image_name }}:$TAG' using Dockerfile '${{ inputs.path_dockerfile }}'"
+
+        docker build -f "${{ inputs.path_dockerfile }}" -t "${{ inputs.image_name }}:$TAG" .
+      shell: bash
