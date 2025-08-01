@@ -1,0 +1,7 @@
+name: 'Maven Build'
+description: 'Run Maven build'
+runs:
+  using: 'docker'
+  image: 'maven:3.8.5-openjdk-17'
+  entrypoint: 'mvn'
+  args: ['clean', 'install', '-B']
