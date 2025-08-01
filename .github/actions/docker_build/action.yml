@@ -4,26 +4,32 @@ description: 'Build a Docker image with customizable Dockerfile, image name, and
 inputs:
   path_dockerfile:
     description: 'src/main/docker/Dockerfile.jvm'
-    required: false
     default: 'Dockerfile'
   image_name:
     description: 'academy'
-    required: true
   tag_name:
     description: '1754052266'
-    required: false
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
-    - run: |
+    - name: Define Tag name
+      run: |
         if [ -z "${{ inputs.tag_name }}" ]; then
-          TAG=$(date +%s)
+        echo "TAG=$(date +%s)" >> $GITHUB_ENV
         else
-          TAG="${{ inputs.tag_name }}"
+        echo "TAG=${{ inputs.tag_name }}" >> $GITHUB_ENV
         fi
+      shell: bash
 
-        echo "Building Docker image '${{ inputs.image_name }}:$TAG' using Dockerfile '${{ inputs.path_dockerfile }}'"
+    - name: Define Image name
+      run: echo "DOCKER_IMAGE_NAME=${{ inputs.image_name }}:${{ env.TAG }}" >> $GITHUB_ENV
+      shell: bash
 
-        docker build -f "${{ inputs.path_dockerfile }}" -t "${{ inputs.image_name }}:$TAG" .
+    - name: Docker Build
+      run: docker build .  --file ${{ inputs.path_dockerfile }} --tag ${{ env.DOCKER_IMAGE_NAME }}
+      shell: bash
+
+    - name: Verify Docker Images
+      run: docker images
       shell: bash
